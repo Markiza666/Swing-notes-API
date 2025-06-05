@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A note API is being built here to handle CRUD operations, authentication, and API documentation.",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
