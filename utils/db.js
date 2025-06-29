@@ -1,9 +1,21 @@
-const Datastore = require('nedb');
-const path = require('path');
+import mongoose from 'mongoose'; 
+import dotenv from 'dotenv';
 
-const db = {
-    users: new Datastore({ filename: path.join(__dirname, '../data/users.db'), autoload: true }),
-    notes: new Datastore({ filename: path.join(__dirname, '../data/notes.db'), autoload: true })
+dotenv.config();
+
+/**
+ * Function to connect to the MongoDB database.
+ * Uses the MONGODB_URI from the .env file.
+ */
+const connectDB = async () => {
+    try {
+        const conn = await mongoose.connect(process.env.MONGODB_URI);
+
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } catch (error) {
+        console.error(`Error: ${error.message}`);
+        process.exit(1);
+    }
 };
 
-module.exports = db;
+export default connectDB;
