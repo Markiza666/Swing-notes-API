@@ -8,107 +8,34 @@ const __dirname = path.dirname(__filename);
 
 const options = {
     definition: {
-        openapi: '3.0.0',    // OpenAPI specification version
+        openapi: '3.0.0',
         info: {
             title: 'Swing Notes API',
             version: '1.0.0',
-            description: 'Ett enkelt API för att hantera anteckningar',
+            description: 'A simple API for managing notes',
         },
         servers: [
             {
                 url: 'http://localhost:3000',
-                description: 'Lokal utvecklingsserver',
+                description: 'Local development server',
             },
         ],
-        // Components for reusable schemas and security definitions
         components: {
             securitySchemes: {
-                // Defines a security scheme for JWT bearer token
                 bearerAuth: {
-                type: 'http',
-                scheme: 'bearer',
-                bearerFormat: 'JWT',
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'JWT',
                 },
             },
             schemas: {
-                // Schema for user signup request body
-                UserSignup: {
-                    type: 'object',
-                    required: ['username', 'password'],
-                    properties: {
-                        username: {
-                            type: 'string',
-                            description: 'Användarnamn',
-                            example: 'testuser',
-                        },
-                        password: {
-                            type: 'string',
-                            description: 'Lösenord',
-                            example: 'password123',
-                        },
-                    },
-                },
-                // Schema for user login request body
-                UserLogin: {
-                    type: 'object',
-                    required: ['username', 'password'],
-                    properties: {
-                        username: {
-                            type: 'string',
-                            description: 'Användarnamn',
-                            example: 'testuser',
-                        },
-                        password: {
-                            type: 'string',
-                            description: 'Lösenord',
-                            example: 'password123',
-                        },
-                    },
-                },
-                // Schema for a Note object (used for response and request body)
-                Note: {
-                    type: 'object',
-                    required: ['title', 'text'],
-                    properties: {
-                        _id: {      // MongoDB's unique identifier for the document
-                            type: 'string',
-                            description: 'Genererat ID för anteckningen (MongoDB _id)',
-                            readOnly: true,     // Indicates this field is read-only
-                        },
-                        title: {
-                            type: 'string',
-                            description: 'Titeln på anteckningen (max 50 tecken)',
-                            example: 'Min första anteckning',
-                        },
-                        text: {
-                            type: 'string',
-                            description: 'Själva anteckningstexten (max 300 tecken)',
-                            example: 'Detta är en testanteckning.',
-                        },
-                        userId: {
-                            type: 'string',
-                            description: 'ID för användaren som äger anteckningen',
-                            readOnly: true,
-                        },
-                        createdAt: {    // Mongoose automatically adds this timestamp
-                            type: 'string',
-                            format: 'date-time',
-                            description: 'När anteckningen skapades',
-                            readOnly: true,
-                        },
-                        updatedAt: {    // Mongoose automatically updates this timestamp on modification
-                            type: 'string',
-                            format: 'date-time',
-                            description: 'När anteckningen senast uppdaterades',
-                            readOnly: true,
-                        },
-                    },
-                },
+                // All schemas (e.g., UserSignup, UserLogin, Note)
+                // are now defined directly within their respective model files (userModel.js, noteModel.js) using JSDoc comments.
+                // This section can remain empty as swagger-jsdoc will discover them.
             },
         },
     },
-    // Paths to files containing OpenAPI annotations (JSDoc comments)
-    apis: [path.join(__dirname, '../routes/*.js')],     // Look for JSDoc in all .js files in the routes directory
+    apis: [path.join(__dirname, '../routes/*.js'), path.join(__dirname, '../models/*.js')],
 };
 
 // Generate the Swagger specification

@@ -1,7 +1,41 @@
 import mongoose from 'mongoose'; 
 import bcrypt from 'bcryptjs';
 
-// Define the Mongoose schema for the User model
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     UserSignup:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *       properties:
+ *         username:
+ *           type: string
+ *           description: Username for the new account.
+ *           example: newuser123
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: Password for the new account.
+ *           example: securePassword123
+ *     UserLogin:
+ *       type: object
+ *       required:
+ *         - username
+ *         - password
+ *       properties:
+ *         username:
+ *           type: string
+ *           description: Username for login.
+ *           example: existinguser
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: Password for login.
+ *           example: mysecretpassword
+ */
 const userSchema = mongoose.Schema(
     {
         username: {
