@@ -2,6 +2,7 @@ import express from 'express';
 import Note from '../models/noteModel.js';
 import authenticateToken from '../middleware/authMiddleware.js';
 import { validateNote } from '../middleware/validationMiddleware.js';
+import mongoose from 'mongoose';
 
 const router = express.Router();
 
@@ -155,6 +156,187 @@ router.post('/', authenticateToken, validateNote, async (req, res) => {
             return res.status(400).json({ message: error.message });
         }
         res.status(500).json({ message: 'Error saving note' });
+    }
+});
+
+/**
+ * @swagger
+ * /api/notes/search:
+ *   get:
+ *     summary: Search for notes by title
+ *     tags: [Notes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: q
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Search term for the note title
+ *         example: meeting
+ *     responses:
+ *       200:
+ *         description: A list of notes matching the search term
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Note'
+ *       400:
+ *         description: Search term missing
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Search query (q) is required
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No token, authorization denied.
+ *       403:
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Token is not valid.
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error searching notes
+ */
+router.get('/search', authenticateToken, async (req, res) => {
+    const { q } = req.query;
+    if (!q) {
+        return res.status(400).json({ message: 'Search query (q) is required' });
+    }
+
+    try {
+        const notes = await Note.find({
+            userId: req.user.id,
+            title: { $regex: new RegExp(q, 'i') },  // <-- Sökning sker på titel.
+        }).sort({ createdAt: -1 });
+        res.status(200).json(notes);
+    } catch (error) {
+        console.error("Search notes error:", error);
+        res.status(500).json({ message: 'Error searching notes' });
+    }
+});
+
+/**
+ * @swagger
+ * /api/notes/{id}:
+ *   get:
+ *     summary: Retrieve a single note by ID for the authenticated user
+ *     tags: [Notes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *           required: true
+ *           description: ID of the note to retrieve
+ *     responses:
+ *       200:
+ *         description: The requested note
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Note'
+ *       400:
+ *         description: Invalid ID format
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Invalid note ID format.
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: No token, authorization denied.
+ *       403:
+ *         description: Forbidden
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Token is not valid.
+ *       404:
+ *         description: Note not found or you do not have permission
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Note not found.
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error fetching note.
+ */
+router.get('/:id', authenticateToken, async (req, res) => {
+    const { id } = req.params;
+
+    // Optional: Validate if the ID is a valid MongoDB ObjectId
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: 'Invalid note ID format.' });
+    }
+
+    try {
+        // Find the note by its ID AND ensure it belongs to the authenticated user
+        const note = await Note.findOne({ _id: id, userId: req.user.id });
+
+        if (!note) {
+            // If no note is found (either wrong ID or wrong user), return 404
+            return res.status(404).json({ message: 'Note not found.' });
+        }
+
+        res.status(200).json(note);
+    } catch (error) {
+        console.error("Get single note error:", error);
+        res.status(500).json({ message: 'Error fetching note.' });
     }
 });
 
@@ -348,90 +530,6 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     } catch (error) {
         console.error("Delete note error:", error);
         res.status(500).json({ message: 'Error deleting note' });
-    }
-});
-
-/**
- * @swagger
- * /api/notes/search:
- *   get:
- *     summary: Search for notes by title
- *     tags: [Notes]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: query
- *         name: q
- *         schema:
- *           type: string
- *         required: true
- *         description: Search term for the note title
- *         example: meeting
- *     responses:
- *       200:
- *         description: A list of notes matching the search term
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/Note'
- *       400:
- *         description: Search term missing
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Search query (q) is required
- *       401:
- *         description: Unauthorized
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: No token, authorization denied.
- *       403:
- *         description: Forbidden
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Token is not valid.
- *       500:
- *         description: Internal server error
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: Error searching notes
- */
-router.get('/search', authenticateToken, async (req, res) => {
-    const { q } = req.query;
-    if (!q) {
-        return res.status(400).json({ message: 'Search query (q) is required' });
-    }
-
-    try {
-        const notes = await Note.find({
-            userId: req.user.id,
-            title: { $regex: new RegExp(q, 'i') },
-        }).sort({ createdAt: -1 });
-        res.status(200).json(notes);
-    } catch (error) {
-        console.error("Search notes error:", error);
-        res.status(500).json({ message: 'Error searching notes' });
     }
 });
 

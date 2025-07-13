@@ -1,9 +1,9 @@
-import User from '../models/userModel.js'; // Import the User model
-import jwt from 'jsonwebtoken';         // Import jsonwebtoken for creating JWTs
-import Joi from 'joi';                  // Import Joi for input validation
-import dotenv from 'dotenv';            // Import dotenv to load environment variables
+import User from '../models/userModel.js';
+import jwt from 'jsonwebtoken';
+import Joi from 'joi';
+import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables from .env file
+dotenv.config();
 
 const signupSchema = Joi.object({
     username: Joi.string().min(3).required(),
@@ -63,7 +63,6 @@ const signup = async (req, res) => {
  */
 const login = async (req, res) => {
     try {
-        // Validate request body against the login schema.
         const { error } = loginSchema.validate(req.body);
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
