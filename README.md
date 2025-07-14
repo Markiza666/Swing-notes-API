@@ -11,7 +11,7 @@ A **RESTful API** for secure management of personal notes. Built with **Node.js*
 * **User Authentication:** Registration and login via JSON Web Tokens (JWT).
 * **Security:** Passwords are hashed with `bcryptjs`.
 * **Note Management (CRUD):** Create, read (all/specific), update, and delete notes.
-* **Search Functionality:** Search notes by title (meets "VG-krav" / excellent grade requirement).
+* **Search Functionality:** Search notes by title.
 * **Data Validation:** Incoming data is validated using Joi.
 * **Global Error Handling:** Consistent HTTP status codes (200, 201, 400, 401, 403, 404, 500).
 * **API Documentation:** Interactive documentation available via Swagger UI.
