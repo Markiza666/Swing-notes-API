@@ -1,4 +1,6 @@
-# Swing-notes-API ![Swagger Logo (placeholder)](./img/swagger-seeklogo.svg)
+# Swing-notes-API  
+
+![Swagger Logo (placeholder)](./img/swagger-seeklogo.svg)
 
 A **RESTful API** for secure management of personal notes. Built with **Node.js**, **Express.js**, and **MongoDB**, focusing on authentication, data validation, and robust error handling.
 
