@@ -2,16 +2,38 @@
   "name": "swing-notes-api",
   "version": "1.0.0",
   "description": "A note API is being built here to handle CRUD operations, authentication, and API documentation.",
-  "main": "index.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Markiza666/Swing-notes-API.git"
+  },
+  "keywords": [
+    "api",
+    "backend",
+    "node",
+    "express",
+    "mongodb",
+    "CRUD",
+    "authentication",
+    "database",
+    "notes",
+    "swagger",
+    "documentation",
+    "mongoose",
+    "joi",
+    "jsonwebtoken",
+    "bcryptjs",
+    "nodemon",
+    "rest"
+  ],
+  "author": "Markiza666",
+  "license": "MIT",
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "dotenv": "^16.6.1",
