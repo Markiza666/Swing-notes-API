@@ -38,28 +38,28 @@ import mongoose from 'mongoose';
  *           readOnly: true
  */
 const noteSchema = new mongoose.Schema(
-  {
-    title: {
-      type: String,
-      required: true,
-      trim: true,
-      maxlength: 50,
+    {
+        title: {
+            type: String,
+            required: true,
+            trim: true,
+            maxlength: 50,
+        },
+        text: {
+            type: String,
+            required: true,
+            trim: true,
+            maxlength: 300,
+        },
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User', 
+            required: true,
+        },
     },
-    text: {
-      type: String,
-      required: true,
-      trim: true,
-      maxlength: 300,
-    },
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', 
-      required: true,
-    },
-  },
-  {
-    timestamps: true,// Automatically adds createdAt and updatedAt fields
-  }
+    {
+        timestamps: true,// Automatically adds createdAt and updatedAt fields
+    }
 );
 
 const Note = mongoose.model('Note', noteSchema);

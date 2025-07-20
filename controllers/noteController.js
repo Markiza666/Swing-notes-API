@@ -93,7 +93,6 @@ const deleteNote = async (req, res) => {
 
 /**
  * Handles searching notes by title for the authenticated user.
- * (VG requirement)
  */
 const searchNotes = async (req, res) => {
     try {

@@ -1,9 +1,6 @@
 import User from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
 import Joi from 'joi';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const signupSchema = Joi.object({
     username: Joi.string().min(3).required(),

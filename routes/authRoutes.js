@@ -2,11 +2,8 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import User from '../models/userModel.js';
 import { validateAuth } from '../middleware/validationMiddleware.js';
-import dotenv from 'dotenv';
 
 const router = express.Router();
-
-dotenv.config();
 
 /**
  * @swagger

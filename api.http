@@ -1,75 +1,77 @@
-// --- Testar i Rest Client ---//
-// --- Användarautentisering --- //
+// - Testing in Rest Client -//
 
-// 1. Registrera ny användare (Sign Up)
+
+// --- User Authentication --- //
+
+// 1. Register new user (Sign Up)
 POST http://localhost:3000/api/user/signup
 Content-Type: application/json
 
 {
-    "username": "NewSign",
-    "password": "paswd#$235"
+    "username": "SignUserName",
+    "password": "NewPass123"
 }
 
 ###
 
-// 2. Logga in användare (Login)
+// 2. Log in user (Login)
 POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-    "username": "NewUser",
-    "password": "pass#$235"
+    "username": "SignUserName",
+    "password": "NewPass123"
 }
 
 ###
 
-// --- Anteckningshantering (kräver JWT-token) ---
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4NzNlY2UzOGJjY2VhM2Q3ZDg3ZThlYiIsInVzZXJuYW1lIjoiTmV3VXNlciIsImlhdCI6MTc1MjQyNzc4NSwiZXhwIjoxNzUyNDMxMzg1fQ.IwoBhOknVPyLkWVJgpOxJMsJkheXpoGFnppfcdxtms4
+// --- Note Management (requires JWT token) ---
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4N2QxNTk0MTc1MDQxMmFjMzBiMDU5MCIsInVzZXJuYW1lIjoiU2lnblVzZXJOYW1lIiwiaWF0IjoxNzUzMDI4MDEzLCJleHAiOjE3NTMwMzE2MTN9.1Ircr8m7epHGuDDTZNf7IJcS9et2ZbCeFytvAzw-Mtw
 
 ###
 
-// 3. Hämta alla anteckningar (GET /api/notes)
+// 3. Get all notes (GET /api/notes)
 GET http://localhost:3000/api/notes
 Authorization: Bearer {{token}}
 
 ###
 
-// 4. Skapa en ny anteckning (POST /api/notes)
+// 4. Create a new note (POST /api/notes)
 POST http://localhost:3000/api/notes
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "title": "Min sista anteckning från VS Code",
-    "text": "Det här är en testanteckning skapad med REST Client."
+    "title": "A new note",
+    "text": "This is a test note created with REST Client."
 }
 
 ###
 
-// 5. Hämta en specifik anteckning efter ID (GET /api/notes/:id)
-GET http://localhost:3000/api/notes/6873ed998bccea3d7d87e8ef
-Authorization: Bearer {{token}}
-
-###
-
-// 6. Uppdatera en anteckning (PUT /api/notes/:id)
-PUT http://localhost:3000/api/notes/6873ed998bccea3d7d87e8ef
-Content-Type: application/json
-Authorization: Bearer {{token}}
-
-{
-    "title": "Uppdaterad titel från VS Code",
-    "text": "Den här anteckningen har nu uppdaterats."
-}
-
-###
-
-// 7. Sök efter anteckningar (GET /api/notes/search?q=...)
+// 5. Search for notes (GET /api/notes/search?q=...)
 GET http://localhost:3000/api/notes/search?q=VS%20Code
 Authorization: Bearer {{token}}
 
 ###
 
-// 8. Radera en anteckning (DELETE /api/notes/:id)
-DELETE http://localhost:3000/api/notes/6873ed998bccea3d7d87e8ef
+// 6. Get a specific note by ID (GET /api/notes/:id)
+GET http://localhost:3000/api/notes/687d160a1750412ac30b0596
+Authorization: Bearer {{token}}
+
+###
+
+// 7. Update a note (PUT /api/notes/:id)
+PUT http://localhost:3000/api/notes/687d160a1750412ac30b0596
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "title": "Updated title from VS Code",
+    "text": "This note has now been updated."
+}
+
+###
+
+// 8. Delete a note (DELETE /api/notes/:id)
+DELETE http://localhost:3000/api/notes/687d0da11750412ac30b058b
 Authorization: Bearer {{token}}

@@ -234,7 +234,7 @@ router.get('/search', authenticateToken, async (req, res) => {
     try {
         const notes = await Note.find({
             userId: req.user.id,
-            title: { $regex: new RegExp(q, 'i') },  // <-- Sökning sker på titel.
+            title: { $regex: new RegExp(q, 'i') }, // Case-insensitive search
         }).sort({ createdAt: -1 });
         res.status(200).json(notes);
     } catch (error) {
@@ -319,7 +319,7 @@ router.get('/search', authenticateToken, async (req, res) => {
 router.get('/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
 
-    // Optional: Validate if the ID is a valid MongoDB ObjectId
+    // Validate if the ID is a valid MongoDB ObjectId
     if (!mongoose.Types.ObjectId.isValid(id)) {
         return res.status(400).json({ message: 'Invalid note ID format.' });
     }
@@ -518,6 +518,10 @@ router.put('/:id', authenticateToken, validateNote, async (req, res) => {
  */
 router.delete('/:id', authenticateToken, async (req, res) => {
     const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) { 
+        return res.status(400).json({ message: 'Invalid ID format' });
+    }
 
     try {
         // The query {_id: id, userId: req.user.id} ensures only the owner can delete the note.
